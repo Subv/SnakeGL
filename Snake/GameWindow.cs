@@ -66,26 +66,24 @@ namespace Snake
         {
             grid = new GridCell[game.Height * game.Width];
 
-            float cur_x = -1.0f;
-            float cur_y = 1.0f;
-            float increment_x = SquareSide / (float)Width;
-            float increment_y = SquareSide / (float)Height;
+            float cur_x = 0f;
+            float cur_y = 0f;
             for (int y = 0; y < game.Height; ++y)
             {
                 for (int x = 0; x < game.Width; ++x)
                 {
                     grid[y * game.Width + x].v0 = new Vector2(cur_x, cur_y);
-                    grid[y * game.Width + x].v1 = new Vector2(cur_x + increment_x, cur_y);
-                    grid[y * game.Width + x].v2 = new Vector2(cur_x + increment_x, cur_y - increment_y);
+                    grid[y * game.Width + x].v1 = new Vector2(cur_x + SquareSide, cur_y);
+                    grid[y * game.Width + x].v2 = new Vector2(cur_x + SquareSide, cur_y + SquareSide);
 
-                    grid[y * game.Width + x].v3 = new Vector2(cur_x, cur_y - increment_y);
+                    grid[y * game.Width + x].v3 = new Vector2(cur_x, cur_y + SquareSide);
                     grid[y * game.Width + x].v4 = grid[y * game.Width + x].v0;
                     grid[y * game.Width + x].v5 = grid[y * game.Width + x].v2;
 
-                    cur_x += increment_x;
+                    cur_x += SquareSide;
                 }
-                cur_x = -1f;
-                cur_y -= increment_y;
+                cur_x = 0f;
+                cur_y += SquareSide;
             }
         }
 
@@ -147,7 +145,7 @@ namespace Snake
 
             VSync = VSyncMode.On;
 
-            modelview = new Matrix4[] { Matrix4.Identity };
+            modelview = new Matrix4[] { Matrix4.CreateOrthographicOffCenter(0f, Width, Height, 0f, -1f, 1f) };
 
             SetupGrid();
             SetupShaders();
