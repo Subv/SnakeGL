@@ -25,6 +25,7 @@ namespace Snake
         #region Vertex Shader Attributes & Uniforms
         int attrib_vposition;
         int attrib_type;
+        int uniform_length;
         int uniform_modelview;
         #endregion
 
@@ -110,6 +111,7 @@ namespace Snake
 
             attrib_vposition = GL.GetAttribLocation(program_id, "vPosition");
             attrib_type = GL.GetAttribLocation(program_id, "in_type");
+            uniform_length = GL.GetUniformLocation(program_id, "length");
             uniform_modelview = GL.GetUniformLocation(program_id, "modelview");
 
             if (attrib_type == -1 || attrib_vposition == -1 || uniform_modelview == -1)
@@ -158,6 +160,8 @@ namespace Snake
         {
             base.OnUpdateFrame(e);
             game.Update(e);
+
+            GL.Uniform1(uniform_length, game.GetLength());
 
             var data = new int[game.Height * game.Width * 6];
             for (int y = 0; y < game.Height; ++y)

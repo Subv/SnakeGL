@@ -13,7 +13,7 @@ namespace Snake
             Console.WriteLine("Starting");
 
             using (var game = new GameWindow())
-                game.Run(10);
+                game.Run(15, 30);
 
             Console.WriteLine("Exiting");
         }

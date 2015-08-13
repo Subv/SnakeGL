@@ -22,6 +22,7 @@ namespace Snake
         {
             public const int Empty = 0;
             public const int Food  = -1;
+            public const int ShrinkageFood = -2;
             public const int BodyGenStart = 1;
         }
 
@@ -33,7 +34,9 @@ namespace Snake
 
         private GameWindow Window;
 
-        private Random rand = new Random(1234);
+        private Random rand = new Random();
+
+        public const int ShrinkageFoodChance = 10;
 
         private Directions Direction;
         private Position HeadPosition;
@@ -41,6 +44,11 @@ namespace Snake
         public int Height;
         public int[,] Map;
         private int Length;
+
+        public int GetLength()
+        {
+            return Length + 1;
+        }
 
         public void Reset(GameWindow window, int width, int height)
         {
@@ -71,7 +79,10 @@ namespace Snake
                 y = rand.Next(0, Height);
             }
 
-            Map[x, y] = EntityType.Food;
+            if (rand.Next(0, 100) > ShrinkageFoodChance || Length == 0)
+                Map[x, y] = EntityType.Food;
+            else
+                Map[x, y] = EntityType.ShrinkageFood;
         }
 
         public void Update(FrameEventArgs e)
@@ -138,6 +149,12 @@ namespace Snake
                 Length++;
                 GenerateFood();
             }
+            else if (Map[HeadPosition.x, HeadPosition.y] == EntityType.ShrinkageFood)
+            {
+                Length--;
+                GenerateFood();
+            }
+
 
             Map[HeadPosition.x, HeadPosition.y] = EntityType.BodyGenStart + Length;
         }
