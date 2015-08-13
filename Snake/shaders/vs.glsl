@@ -12,5 +12,5 @@ void main()
 {
     gl_Position = modelview * vec4(vPosition, 1.0);
     color = vec4(0.0f, 0.0f, 0.0f, 1.0f);
-	type = in_type;
+    type = in_type;
 }
