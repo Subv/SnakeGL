@@ -129,7 +129,7 @@ namespace Snake
             GL.GenBuffers(1, out vbo_type);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_position);
-            GL.BufferData<GridCell>(BufferTarget.ArrayBuffer, (IntPtr)(Marshal.SizeOf<GridCell>() * grid.Length), grid, BufferUsageHint.DynamicDraw);
+            GL.BufferData<GridCell>(BufferTarget.ArrayBuffer, (IntPtr)(Marshal.SizeOf<GridCell>() * grid.Length), grid, BufferUsageHint.StaticDraw);
             GL.VertexAttribPointer(attrib_vposition, 2, VertexAttribPointerType.Float, false, 0, 0);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_type);
