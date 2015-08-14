@@ -1,6 +1,5 @@
 ﻿#version 330
  
-in vec4 color;
 flat in int type;
 out vec4 outputColor;
 
