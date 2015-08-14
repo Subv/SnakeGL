@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -19,8 +15,7 @@ namespace Snake
         private int vertex_shader_id;
         private int fragment_shader_id;
 
-        private const int SquareSide = 40;
-        private int NumSquares;
+        private const int SquareSide = 20;
 
         #region Vertex Shader Attributes & Uniforms
         int attrib_vposition;
@@ -58,7 +53,6 @@ namespace Snake
             base(800, 600, new GraphicsMode(), "Snake", 0, DisplayDevice.Default, 4, 0, 
                 GraphicsContextFlags.ForwardCompatible | GraphicsContextFlags.Debug)
         {
-            NumSquares = 800 * 600 / (SquareSide * SquareSide);
             game = new Snake(this, 800 / SquareSide, 600 / SquareSide);
         }
 
@@ -131,12 +125,15 @@ namespace Snake
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_position);
             GL.BufferData<GridCell>(BufferTarget.ArrayBuffer, (IntPtr)(Marshal.SizeOf<GridCell>() * grid.Length), grid, BufferUsageHint.StaticDraw);
             GL.VertexAttribPointer(attrib_vposition, 2, VertexAttribPointerType.Float, false, 0, 0);
+            GL.EnableVertexAttribArray(attrib_vposition);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_type);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(Marshal.SizeOf<int>() * grid.Length * 6), IntPtr.Zero, BufferUsageHint.DynamicDraw);
             GL.VertexAttribIPointer(attrib_type, 1, VertexAttribIntegerType.Int, 0, IntPtr.Zero);
+            GL.EnableVertexAttribArray(attrib_type);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            GL.BindVertexArray(0);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -172,7 +169,7 @@ namespace Snake
             }
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_type);
-            GL.BufferSubData<int>(BufferTarget.ArrayBuffer, IntPtr.Zero, (IntPtr)(Marshal.SizeOf<int>() * data.Length), data);
+            GL.BufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, (IntPtr)(Marshal.SizeOf<int>() * data.Length), data);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
 
@@ -183,14 +180,9 @@ namespace Snake
             GL.Viewport(0, 0, Width, Height);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            GL.EnableVertexAttribArray(attrib_type);
-            GL.EnableVertexAttribArray(attrib_vposition);
-
+            GL.BindVertexArray(vao_root);
             GL.DrawArrays(PrimitiveType.Triangles, 0, 3 * grid.Length * 6);
-
-            GL.DisableVertexAttribArray(attrib_type);
-            GL.DisableVertexAttribArray(attrib_vposition);
-            GL.Flush();
+            GL.BindVertexArray(0);
 
             SwapBuffers();
         }
